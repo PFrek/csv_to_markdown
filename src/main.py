@@ -36,7 +36,12 @@ def get_titles(title_line):
     return titles
 
 
-def read_csv(csv):
+def read_csv(input):
+    print(f"Reading csv from '{input}'")
+    csv = ""
+    with open(input, "r") as f:
+        csv = f.read()
+
     lines = list(filter(lambda line: len(line) > 0, csv.split("\n")))
     if len(lines) == 0:
         raise ValueError("Could not read .csv: empty file")
@@ -65,6 +70,18 @@ def read_csv(csv):
     return table
 
 
+def write_markdown(output, markdown):
+    mode = "w"
+
+    if not os.path.exists(output):
+        mode = "x"
+        print(f"Creating new output file: {output}")
+
+    print(f"Writing markdown to file: {output}")
+    with open(output, mode) as f:
+        f.write(markdown)
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="csv_to_md",
@@ -84,6 +101,13 @@ def main():
         action="store_true",
     )
 
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        help="Prints the converted markdown to stdout",
+        action="store_true",
+    )
+
     args = parser.parse_args()
 
     input = args.src_csv
@@ -96,13 +120,9 @@ def main():
         print("Error:", e)
         return
 
-    csv = ""
-    with open(input, "r") as f:
-        csv = f.read()
-
     table = None
     try:
-        table = read_csv(csv)
+        table = read_csv(input)
     except ValueError as e:
         print("Error:", e)
         return
@@ -111,7 +131,13 @@ def main():
         print("Failed to create Table")
         return
 
-    print(table.to_markdown())
+    markdown = table.to_markdown()
+
+    if args.verbose:
+        print("Converted markdown:")
+        print(markdown)
+
+    write_markdown(output, markdown)
 
 
 main()
