@@ -25,8 +25,12 @@ class Column:
     def num_rows(self):
         return len(self.cells)
 
-    def add_cell(self, cell):
-        self.cells.append(cell)
+    def add_cell(self, val):
+        new_cell = val
+        if not isinstance(val, Cell):
+            new_cell = Cell(val)
+
+        self.cells.append(new_cell)
 
     def get_padding_string(self):
         return " " * self.padding

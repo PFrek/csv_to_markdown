@@ -1,19 +1,19 @@
 class Cell:
-    def __init__(self, val):
+    def __init__(self, val, none_str=""):
         self.val = val
+        self.none_str = none_str
 
     def __repr__(self):
-        r = ""
         if self.val:
-            r += f"{self.val}"
+            return f"{self.val}"
 
-        return r
+        return self.none_str
 
     def __len__(self):
-        length = 0
         if self.val:
-            length = len(f"{self.val}")
-        return length
+            return len(f"{self.val}")
+
+        return len(self.none_str)
 
     def __eq__(self, other):
         return self.val == other.val

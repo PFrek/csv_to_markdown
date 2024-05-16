@@ -1,21 +1,21 @@
-| id | name        | age |
-|----|-------------|-----|
-| 1  | Joe         | 25  |
-| 2  | Larry       | 98  |
-| 3  | Sarah       | 31  |
-| 4  | Doug        | 19  |
-| 5  | Nostradamus | 230 |
-| 6  | Doug        | 19  |
-| 7  | Doug        | 19  |
-| 8  | Doug        | 19  |
-| 9  | Doug        | 19  |
-| 10 | Doug        | 19  |
-| 11 | Doug        | 19  |
-| 12 | Doug        | 19  |
-| 13 |             | 5   |
-| 14 | Doug        | 19  |
-| 15 | Doug        | 19  |
-| 16 | Doug        | 19  |
-| 17 | Doug        | 19  |
-| 18 | Doug        | 19  |
-| 19 | Doug        | 19  |
+| id | name           | age |
+|----|----------------|-----|
+| 1  | Joe            | 25  |
+| 2  | Larry          | 98  |
+| 3  | Sarah          | 31  |
+| 4  | Doug           | 19  |
+| 5  | Nostradamus    | 230 |
+| 6  | Doug           | 19  |
+| 7  | Doug           | 19  |
+| 8  | Doug           | 19  |
+| 9  | Doug           | 19  |
+| 10 | Doug           | 19  |
+| 11 | Doug           | 19  |
+| 12 | Doug           | 19  |
+| 13 | [empty] [cell] | 5   |
+| 14 | Doug           | 19  |
+| 15 | Doug           | 19  |
+| 16 | Doug           | 19  |
+| 17 | Doug           | 19  |
+| 18 | Doug           | 19  |
+| 19 | Doug           | 19  |

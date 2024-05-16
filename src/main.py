@@ -28,46 +28,13 @@ def check_files(input, output, force):
                              output}' already exists. To overwrite the file, use the --force flag")
 
 
-def get_titles(title_line):
-    titles = title_line.split(",")
-    if len(titles) == 0:
-        raise ValueError("Could not find titles in .csv: empty file")
-
-    return titles
-
-
 def read_csv(input):
     print(f"Reading csv from '{input}'")
     csv = ""
     with open(input, "r") as f:
         csv = f.read()
 
-    lines = list(filter(lambda line: len(line) > 0, csv.split("\n")))
-    if len(lines) == 0:
-        raise ValueError("Could not read .csv: empty file")
-
-    titles = get_titles(lines[0])
-
-    num_cols = len(titles)
-    cols = []
-
-    for i in range(num_cols):
-        cols.append(Column(titles[i]))
-
-    for line_num in range(1, len(lines)):
-        line = lines[line_num]
-        cells = line.split(",")
-
-        if len(cells) != num_cols:
-            raise ValueError(f"Mismatched number of columns found in line {
-                             line_num}: {line}")
-
-        for i in range(num_cols):
-            cols[i].add_cell(cells[i])
-
-    table = Table(cols)
-
-    return table
+    return csv
 
 
 def write_markdown(output, markdown):
@@ -108,6 +75,11 @@ def main():
         action="store_true",
     )
 
+    parser.add_argument(
+        "--none_str",
+        help="The string used to represent an empty cell",
+    )
+
     args = parser.parse_args()
 
     input = args.src_csv
@@ -120,9 +92,19 @@ def main():
         print("Error:", e)
         return
 
-    table = None
+    csv = ""
     try:
-        table = read_csv(input)
+        csv = read_csv(input)
+    except Exception as e:
+        print("Error:", e)
+        return
+
+    none_str = ""
+    if args.none_str:
+        none_str = args.none_str
+    table = Table([], none_str=none_str)
+    try:
+        table.from_csv(csv)
     except ValueError as e:
         print("Error:", e)
         return
