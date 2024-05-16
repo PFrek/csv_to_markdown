@@ -1,9 +1,7 @@
-import unittest
 import os
 import argparse
 
 from table import Table
-from column import Column
 
 
 def get_extension(filename):
