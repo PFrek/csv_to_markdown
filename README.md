@@ -6,6 +6,7 @@ Simple program in Python that converts a .csv file to an equivalent table in .md
 
 Run csv_to_md.sh or (src/main.py) passing the required arguments:
 
+```
 usage: csv_to_md.sh [-h] [-o OUTPUT] [-f] [-v] [-t] [--none_str NONE_STR] src_csv
 
 Converts .csv files to a markdown table representation
@@ -21,7 +22,7 @@ options:
   -v, --verbose         Prints the converted markdown to stdout
   -t, --test            Converts the file without writing to the output
   --none_str NONE_STR   The string used to represent an empty cell
-
+```
 
 ## Example:
 
