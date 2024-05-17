@@ -8,7 +8,11 @@ def get_extension(filename):
     return "".join(filename.partition(".")[1:])
 
 
-def check_files(input, output, force):
+def check_files(input, options):
+    output = options.get("output")
+    force = options.get("force")
+    test = options.get("test")
+
     input_ext = get_extension(input)
     if input_ext != ".csv":
         raise ValueError(f"Input file does not have .csv extension: '{input_ext}'")
@@ -16,14 +20,18 @@ def check_files(input, output, force):
     if not os.path.isfile(input):
         raise ValueError(f"Input file '{input}' not found")
 
-    output_ext = get_extension(output)
-    if output_ext != ".md":
-        raise ValueError(f"Output file must have .md extension: '{output_ext}'")
+    if not test:
+        if not output:
+            raise ValueError(f"Output file is required when not in --test mode")
 
-    if os.path.isfile(output):
-        if not force:
-            raise ValueError(f"Output file '{
-                             output}' already exists. To overwrite the file, use the --force flag")
+        output_ext = get_extension(output)
+        if output_ext != ".md":
+            raise ValueError(f"Output file must have .md extension: '{output_ext}'")
+
+        if os.path.isfile(output):
+            if not force:
+                raise ValueError(f"Output file '{
+                                 output}' already exists. To overwrite the file, use the --force flag")
 
 
 def read_csv(input):
@@ -49,15 +57,13 @@ def write_markdown(output, markdown):
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="csv_to_md",
+        prog="csv_to_md.sh",
         description="Converts .csv files to a markdown table representation",
     )
 
     parser.add_argument("src_csv", help="The .csv file to be converted")
 
-    parser.add_argument(
-        "-o", "--output", help="The name of the .md output file", required=True
-    )
+    parser.add_argument("-o", "--output", help="The name of the .md output file")
 
     parser.add_argument(
         "-f",
@@ -74,33 +80,49 @@ def main():
     )
 
     parser.add_argument(
+        "-t",
+        "--test",
+        help="Converts the file without writing to the output",
+        action="store_true",
+    )
+
+    parser.add_argument(
         "--none_str",
         help="The string used to represent an empty cell",
+        default="",
     )
 
     args = parser.parse_args()
 
-    input = args.src_csv
-    output = args.output
-    force = args.force
+    options = {
+        "input": args.src_csv,
+        "force": args.force,
+        "test": args.test,
+        "output": "",
+        "none_str": args.none_str,
+        "verbose": args.verbose,
+    }
+
+    if not options["test"] and args.output:
+        options["output"] = args.output
+
+    if options["test"]:
+        options["verbose"] = True
 
     try:
-        check_files(input, output, force)
+        check_files(options["input"], options)
     except ValueError as e:
         print("Error:", e)
         return
 
     csv = ""
     try:
-        csv = read_csv(input)
+        csv = read_csv(options["input"])
     except Exception as e:
         print("Error:", e)
         return
 
-    none_str = ""
-    if args.none_str:
-        none_str = args.none_str
-    table = Table([], none_str=none_str)
+    table = Table([], none_str=options["none_str"])
     try:
         table.from_csv(csv)
     except ValueError as e:
@@ -113,11 +135,12 @@ def main():
 
     markdown = table.to_markdown()
 
-    if args.verbose:
+    if options["verbose"]:
         print("Converted markdown:")
         print(markdown)
 
-    write_markdown(output, markdown)
+    if not options["test"]:
+        write_markdown(options["output"], markdown)
 
 
 main()
